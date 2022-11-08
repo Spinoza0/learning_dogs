@@ -1,8 +1,11 @@
 package com.spinoza.dogs;
 
+import android.app.Application;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Single;
@@ -12,19 +15,19 @@ import io.reactivex.rxjava3.functions.Action;
 import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class MainViewModel extends ViewModel {
+public class MainViewModel extends AndroidViewModel {
 
     private static final String TAG = "spinoza MainViewModel";
 
-    private MutableLiveData<DogImage> dogImage = new MutableLiveData<>();
-    private MutableLiveData<Boolean> isError = new MutableLiveData<>();
-    private MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
+    private final MutableLiveData<DogImage> dogImage = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isError = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
 
     public LiveData<Boolean> getIsLoading() {
         return isLoading;
     }
 
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     public LiveData<DogImage> getDogImage() {
         return dogImage;
@@ -38,8 +41,8 @@ public class MainViewModel extends ViewModel {
         this.isError.setValue(isError);
     }
 
-    public MainViewModel() {
-        super();
+    public MainViewModel(@NonNull Application application) {
+        super(application);
     }
 
     public void loadDogImage() {
