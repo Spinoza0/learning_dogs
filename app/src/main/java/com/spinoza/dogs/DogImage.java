@@ -3,8 +3,8 @@ package com.spinoza.dogs;
 import androidx.annotation.NonNull;
 
 public class DogImage {
-    private String message;
-    private String status;
+    private final String message;
+    private final String status;
 
     public DogImage(String message, String status) {
         this.message = message;
@@ -13,10 +13,6 @@ public class DogImage {
 
     public String getMessage() {
         return message;
-    }
-
-    public String getStatus() {
-        return status;
     }
 
     @NonNull

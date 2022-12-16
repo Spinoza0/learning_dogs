@@ -8,14 +8,11 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String TAG = "spinoza MainActivity";
-
     private ImageView imageViewDog;
     private ProgressBar progressBar;
     private Button buttonLoadImage;
@@ -33,12 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
         loadDogImage();
 
-        buttonLoadImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loadDogImage();
-            }
-        });
+        buttonLoadImage.setOnClickListener(view -> loadDogImage());
     }
 
     private void initViews() {
@@ -48,37 +40,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadDogImage() {
-        viewModel.getIsLoading().observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                if(aBoolean){
-                    progressBar.setVisibility(View.VISIBLE);
-                }else{
-                    progressBar.setVisibility(View.GONE);
-                }
-            }
-        });
+        viewModel.getIsLoading().observe(this, isLoading ->
+                progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE)
+        );
         viewModel.loadDogImage();
-        viewModel.getDogImage().observe(this, new Observer<DogImage>() {
-            @Override
-            public void onChanged(DogImage dogImage) {
-                Glide.with(MainActivity.this)
-                        .load(dogImage.getMessage())
-                        .into(imageViewDog);
-            }
+        viewModel.getDogImage().observe(this, dogImage -> Glide.with(MainActivity.this)
+                .load(dogImage.getMessage())
+                .into(imageViewDog));
 
-        });
-
-        viewModel.getIsError().observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean isError) {
-                if (isError){
-                    Toast.makeText(
-                            MainActivity.this,
-                            R.string.image_loading_error,
-                            Toast.LENGTH_SHORT).show();
-                    viewModel.setIsError(false);
-                }
+        viewModel.getIsError().observe(this, isError -> {
+            if (isError) {
+                Toast.makeText(
+                        MainActivity.this,
+                        R.string.image_loading_error,
+                        Toast.LENGTH_SHORT
+                ).show();
+                viewModel.setIsError(false);
             }
         });
     }
